@@ -1,0 +1,35 @@
+1. Change appname to desired app name in the following locations:
+	{appname/} directory
+	main.py: 'from {appname}.app import create_app
+	
+2. Delete Template model in models.py and add your own models
+
+3. Create virtual environment and install requirements
+	$ python3 -m venv venv
+	$ soure venv/bin/activate
+	$ pip install -r requirements.txt
+
+4. Add secret key and database url to .env file
+
+5. Create models and initialize alembic
+	$ alembic init migrations
+
+	a. edit migrations/env.py
+		import {appname.models}
+		from {appname}.db import Model, engine
+
+		target_metadata = Model.metadata
+		config.set_main_option("sqlalchemy.url", engine.url.render_as_string(
+			hide_password=False))
+
+		connection=connection, target_metadata=target_metadata,
+			render_as_batch=True,)
+
+	b. create migration script (db must be empty)
+		$ alembic init migrations
+		$ alembic revision --autogenerate -m "init migration"
+		$ alembic upgrade head
+
+to run flask debug in shell:
+	$ export FLASK_APP=main.py
+	$ flask run
